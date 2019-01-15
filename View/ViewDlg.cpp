@@ -57,6 +57,29 @@ BOOL CViewDlg::OnInitDialog()
 	return TRUE;  // 傳回 TRUE，除非您對控制項設定焦點
 }
 
+BOOL CViewDlg::OnCommand(WPARAM wParam, LPARAM lParam)
+{
+	WORD wControlID = LOWORD(wParam);
+	WORD wMessageID = HIWORD(wParam);
+
+	if (wControlID != 0) {
+		switch (wControlID) {
+		case IDCANCEL:
+			OnCancel();
+			return TRUE;
+			break;
+		default:
+			CDialogEx::OnCommand(wParam, lParam);
+			break;
+		}
+	}
+}
+
+void CViewDlg::OnCancel()
+{
+	CDialogEx::OnCancel();
+}
+
 // 如果將最小化按鈕加入您的對話方塊，您需要下列的程式碼，
 // 以便繪製圖示。對於使用文件/檢視模式的 MFC 應用程式，
 // 框架會自動完成此作業。

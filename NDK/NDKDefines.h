@@ -47,4 +47,9 @@ enum NDKMessage
 
 // Put AFX_EXT_CLASS after NDK_EXT_CLASS if the NDK is built into an 
 // extension DLL
-#define NDK_EXT_CLASS
+
+#ifdef NDK_EXPORTS
+#define NDK_EXT_CLASS  __declspec(dllexport) 
+#else
+#define NDK_EXT_CLASS  __declspec(dllimport) 
+#endif

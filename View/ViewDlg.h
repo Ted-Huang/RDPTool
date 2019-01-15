@@ -26,6 +26,8 @@ protected:
 
 	// 產生的訊息對應函式
 	virtual BOOL OnInitDialog();
+	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+	virtual void OnCancel();
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
 	afx_msg void OnConnect();

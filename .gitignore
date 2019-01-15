@@ -251,4 +251,6 @@ DASRC/VersionCount.txt
 *.opensdf
 *.suo
 *.aps
-/MFCView/*.user
+*.user
+*.exp
+*.lib
