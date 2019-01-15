@@ -150,6 +150,9 @@ void CViewDlg::Init()
 	::GetWindowRect(hDesktop, &rcDesktop);
 	MoveWindow(0, 0, rcDesktop.Width(), rcDesktop.Height());
 	memset(m_xUi, 0, sizeof(m_xUi));
+
+	if (!StartListening(ServerListenPort))
+		TRACE("socket sever start Fail! \n");
 }
 
 void CViewDlg::Finalize()
@@ -280,4 +283,57 @@ void CViewDlg::DestroyUi()
 		}
 	}
 
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// NDK Server Functions
+
+// Called when a user tries to connect to the server. Return TRUE to accept
+// the connection or FALSE otherwise. The derived class must override this
+// method.
+BOOL CViewDlg::OnIsConnectionAccepted()
+{
+	return (GetNbUsers() <= MAXCLIENT);
+}
+
+// Called when a user is connected to the server. The derived class must 
+// override this method.
+void CViewDlg::OnConnect(long lUserId)
+{
+}
+// Called whenever a message is received from a user. The derived class must 
+// override this method.
+void CViewDlg::OnMessage(long lUserId, CNDKMessage& message)
+{
+	//int cidx = FindId(lUserId);
+	//if (cidx >= 0) {
+	//	m_clientIdleTime[cidx] = 0;
+	//}
+	//------------------------------------
+
+	
+}
+
+// Called whenever a user is disconnected (the the user might have closed 
+// the connection or an error occurs when sending a message, for example). 
+// OnDisconnect callback isn't called when DisconnectUser or 
+// DisconnectAllUsers is used. DisconnectUser don't
+// need to be called when OnDisconnect callback is called. The derived class
+// must override this method.
+void CViewDlg::OnDisconnect(long lUserId, NDKServerDisconnection disconnectionType)
+{
+	UINT unResId = 0;
+	switch (disconnectionType)
+	{
+	case NDKServer_NormalDisconnection:
+		break;
+	case NDKServer_ClientCloseConnection:
+		break;
+	case NDKServer_ErrorSendingMessage:
+		break;
+	case NDKServer_ErrorReceivingMessage:
+		break;
+	default:
+		break;
+	}
 }

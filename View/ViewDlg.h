@@ -5,10 +5,12 @@
 #pragma once
 #include "RDPView.h"
 #include "NDKServer.h"
+#include "MasterSlave.h"
+
 #include <vector>
 using namespace std;
 // CViewDlg 對話方塊
-class CViewDlg : public CDialogEx//, public CNDKServer
+class CViewDlg : public CDialogEx, public CNDKServer
 {
 // 建構
 public:
@@ -39,6 +41,13 @@ private:
 	void InitUiRectPos();
 	void InitUi();
 	void DestroyUi();
+
+protected:
+	//NDK
+	virtual BOOL OnIsConnectionAccepted();
+	virtual void OnConnect(long lUserId);
+	virtual void OnMessage(long lUserId, CNDKMessage& message);
+	virtual void OnDisconnect(long lUserId, NDKServerDisconnection disconnectionType);
 
 private:
 	vector<pair<int, CString>> m_vConnectionString;
