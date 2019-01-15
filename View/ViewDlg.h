@@ -48,8 +48,10 @@ protected:
 	virtual void OnConnect(long lUserId);
 	virtual void OnMessage(long lUserId, CNDKMessage& message);
 	virtual void OnDisconnect(long lUserId, NDKServerDisconnection disconnectionType);
-
 private:
+	int FindId(int lUserId);
+private:
+	LONG	m_clientIDs[MAXCLIENT];
 	vector<pair<int, CString>> m_vConnectionString;
 	typedef struct UI_ITEM_{
 		RECT rcUi;

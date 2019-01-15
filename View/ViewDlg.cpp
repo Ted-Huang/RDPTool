@@ -305,12 +305,21 @@ void CViewDlg::OnConnect(long lUserId)
 // override this method.
 void CViewDlg::OnMessage(long lUserId, CNDKMessage& message)
 {
-	//int cidx = FindId(lUserId);
-	//if (cidx >= 0) {
-	//	m_clientIdleTime[cidx] = 0;
-	//}
+	int cidx = FindId(lUserId);
 	//------------------------------------
-
+	switch (message.GetId())
+	{
+	case DM_RDPSESSION_CONNECTIONSTRING:
+		{
+			pair<int, CString> data;
+			data.first = cidx;
+			message.GetNext(data.second);
+			TRACE(L"ya! %s \n", data.second);
+		}
+		break;
+	default:
+		break;
+	}
 	
 }
 
@@ -336,4 +345,18 @@ void CViewDlg::OnDisconnect(long lUserId, NDKServerDisconnection disconnectionTy
 	default:
 		break;
 	}
+}
+
+int CViewDlg::FindId(int lUserId)
+{
+	int cidx = -1;
+
+	for (int c = 0; c<MAXCLIENT; c++) {
+		if (lUserId == m_clientIDs[c]) {
+			cidx = c;
+			break;
+		}
+	}
+
+	return cidx;
 }

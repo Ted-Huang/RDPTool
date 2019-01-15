@@ -6,7 +6,7 @@
 #include "Session.h"
 #include "SessionDlg.h"
 #include "afxdialogex.h"
-
+#include "NDKMessage.h"
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -96,7 +96,9 @@ HCURSOR CSessionDlg::OnQueryDragIcon()
 
 void CSessionDlg::OnSendString()
 {
-
+	CNDKMessage message(DM_RDPSESSION_CONNECTIONSTRING);
+	message.Add(m_xSession.GetConnectionString());
+	SendMessageToServer(message);
 }
 
 void CSessionDlg::Init()
