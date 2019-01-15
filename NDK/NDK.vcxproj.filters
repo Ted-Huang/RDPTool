@@ -50,31 +50,13 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AOISocketFile.h">
+    <ClInclude Include="StdAfx.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="NDKClientSocket.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
-    <ClInclude Include="NDKDataBuffer.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
-    <ClInclude Include="NDKDefines.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
-    <ClInclude Include="NDKMessage.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
-    <ClInclude Include="NDKMessageData.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
     <ClInclude Include="NDKServerSocket.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
-    <ClInclude Include="NDKUser.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
-    <ClInclude Include="NDKUserManager.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="Socket_MultiStrEvent_Def.h">
@@ -84,6 +66,33 @@
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="Socket_StrEvent_Def.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\NDKUser.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\NDKClient.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\NDKServer.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\NDKDefines.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\NDKUserManager.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\NDKMessage.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\NDKMessageData.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\NDKDataBuffer.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\AOISocketFile.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>

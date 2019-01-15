@@ -4,9 +4,10 @@
 
 #pragma once
 #include "RDPSession.h"
+#include "NDKClient.h"
 
 // CSessionDlg 對話方塊
-class CSessionDlg : public CDialogEx
+class CSessionDlg : public CDialogEx//, public CNDKClient
 {
 // 建構
 public:

@@ -32,18 +32,21 @@
     <ClCompile Include="Socket_MultiStrEvent_SProc.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AOISocketFile.h" />
+    <ClInclude Include="..\include\AOISocketFile.h" />
+    <ClInclude Include="..\include\NDKClient.h" />
+    <ClInclude Include="..\include\NDKDataBuffer.h" />
+    <ClInclude Include="..\include\NDKDefines.h" />
+    <ClInclude Include="..\include\NDKMessage.h" />
+    <ClInclude Include="..\include\NDKMessageData.h" />
+    <ClInclude Include="..\include\NDKServer.h" />
+    <ClInclude Include="..\include\NDKUser.h" />
+    <ClInclude Include="..\include\NDKUserManager.h" />
     <ClInclude Include="NDKClientSocket.h" />
-    <ClInclude Include="NDKDataBuffer.h" />
-    <ClInclude Include="NDKDefines.h" />
-    <ClInclude Include="NDKMessage.h" />
-    <ClInclude Include="NDKMessageData.h" />
     <ClInclude Include="NDKServerSocket.h" />
-    <ClInclude Include="NDKUser.h" />
-    <ClInclude Include="NDKUserManager.h" />
     <ClInclude Include="Socket_MultiStrEvent_Def.h" />
     <ClInclude Include="Socket_MultiStrEvent_SProc.h" />
     <ClInclude Include="Socket_StrEvent_Def.h" />
+    <ClInclude Include="StdAfx.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{368983C5-905F-4306-8F81-868C95D5A518}</ProjectGuid>

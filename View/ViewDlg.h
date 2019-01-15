@@ -4,10 +4,11 @@
 
 #pragma once
 #include "RDPView.h"
+#include "NDKServer.h"
 #include <vector>
 using namespace std;
 // CViewDlg 對話方塊
-class CViewDlg : public CDialogEx
+class CViewDlg : public CDialogEx//, public CNDKServer
 {
 // 建構
 public:
