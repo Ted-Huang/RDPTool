@@ -34,6 +34,7 @@ void CSessionDlg::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CSessionDlg, CDialogEx)
+	ON_WM_TIMER()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(UI_POS_BTN_SEND, OnSendString)
@@ -101,6 +102,26 @@ void CSessionDlg::OnSendString()
 	SendMessageToServer(message);
 }
 
+void CSessionDlg::OnTimer(UINT_PTR nIDEvent)
+{
+	switch (nIDEvent)
+	{
+	case IDT_RETRY_TIMER:
+		if (OpenConnection(m_serverIP, ServerListenPort)){
+			KillTimer(IDT_RETRY_TIMER);
+			TRACE(L"Connect to server ok! \n");
+			OnSendString();
+		}
+		else
+			TRACE(L"Connect to server fail \n");
+		
+		break;
+	default:
+		CDialogEx::OnTimer(nIDEvent);
+		break;
+	}
+}
+
 void CSessionDlg::Init()
 {
 	memset(m_xUi, 0, sizeof(m_xUi));
@@ -113,8 +134,9 @@ void CSessionDlg::Init()
 		}
 	}
 	GetServerAddress(m_serverIP.GetBuffer());
-	if (!OpenConnection(m_serverIP, ServerListenPort))
-		TRACE(L"Connect to server fail \n");
+
+	SetTimer(IDT_RETRY_TIMER, 3000, NULL);
+
 }
 
 void CSessionDlg::Finalize()
@@ -255,4 +277,10 @@ void CSessionDlg::OnDisconnect(NDKClientDisconnection disconnectionType)
 	default:
 		break;
 	}
+
+	// stop first
+	if (IsConnected())
+		CloseConnection();
+
+	SetTimer(IDT_RETRY_TIMER, 3000, NULL);
 }

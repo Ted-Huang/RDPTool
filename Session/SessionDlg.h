@@ -8,6 +8,7 @@
 #include "MasterSlave.h"
 #include "netadapter.h"
 
+#define IDT_RETRY_TIMER 1
 // CSessionDlg ¹ï¸Ü¤è¶ô
 class CSessionDlg : public CDialogEx, public CNDKClient
 {
@@ -31,6 +32,7 @@ protected:
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
 	afx_msg void OnSendString();
+	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	DECLARE_MESSAGE_MAP()
 
 private:
