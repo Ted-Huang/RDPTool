@@ -22,6 +22,11 @@ CSessionDlg::CSessionDlg(CWnd* pParent /*=NULL*/)
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
 
+CSessionDlg::~CSessionDlg()
+{
+	Finalize();
+}
+
 void CSessionDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
@@ -30,6 +35,7 @@ void CSessionDlg::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CSessionDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
+	ON_BN_CLICKED(UI_POS_BTN_SEND, OnSendString)
 END_MESSAGE_MAP()
 
 
@@ -45,7 +51,9 @@ BOOL CSessionDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 設定小圖示
 
 	// TODO:  在此加入額外的初始設定
-
+	Init();
+	InitUiRectPos();
+	InitUi();
 	return TRUE;  // 傳回 TRUE，除非您對控制項設定焦點
 }
 
@@ -85,3 +93,87 @@ HCURSOR CSessionDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
+void CSessionDlg::OnSendString()
+{
+
+}
+
+void CSessionDlg::Init()
+{
+	memset(m_xUi, 0, sizeof(m_xUi));
+}
+
+void CSessionDlg::Finalize()
+{
+	DestroyUi();
+}
+
+void CSessionDlg::InitUiRectPos()
+{
+	POINT ptBase = { 0, 0 };
+	POINT ptSize = { 0, 0 };
+	CRect rcClient;
+	GetClientRect(rcClient);
+	for (int i = UI_POS_ITEM_BEGIN; i < UI_POS_ITEM_END; i++){
+		UINT uImgId = 0;
+		UINT uLanId = 0;
+		switch (i){
+			//BTN
+		case UI_POS_BTN_SEND:
+			ptBase = { 0, 30 };
+			ptSize = { 50, 30 };
+			break;
+			//edit
+		case UI_POS_EDIT_CONNTIONSTRING:  
+			ptBase = { 50, 30 };
+			ptSize = { 1400, 30 };
+			break;
+		}
+
+		m_xUi[i].rcUi = { ptBase.x, ptBase.y, ptBase.x + ptSize.x, ptBase.y + ptSize.y };
+	}
+}
+
+void CSessionDlg::InitUi()
+{
+	CString strCaption;
+	//BTN
+	for (int i = UI_POS_BTN_BEGIN; i < UI_POS_BTN_END; i++){
+		if (!m_xUi[i].pCtrl){
+			m_xUi[i].pCtrl = new CButton();
+			strCaption = (i == UI_POS_BTN_SEND) ? L"Send" : L"";
+			((CButton*)m_xUi[i].pCtrl)->Create(strCaption, WS_VISIBLE | WS_CHILD | WS_TABSTOP, m_xUi[i].rcUi, this, i);
+		}
+	}
+	//EDIT
+	for (int i = UI_POS_EDIT_BEGIN; i < UI_POS_EDIT_END; i++){
+		if (!m_xUi[i].pCtrl){
+			m_xUi[i].pCtrl = new CEdit();
+			((CEdit*)m_xUi[i].pCtrl)->Create(WS_CHILD | WS_VISIBLE | ES_READONLY | WS_TABSTOP | ES_LEFT | WS_BORDER, m_xUi[i].rcUi, this, i);
+		}
+	}
+	((CEdit*)m_xUi[UI_POS_EDIT_CONNTIONSTRING].pCtrl)->SetWindowText(m_xSession.GetConnectionString());
+
+}
+
+void CSessionDlg::DestroyUi()
+{
+	//BTN
+	for (int i = UI_POS_BTN_BEGIN; i < UI_POS_BTN_END; i++){
+		if (m_xUi[i].pCtrl){
+			CButton* pBtn = ((CButton*)m_xUi[i].pCtrl);
+			pBtn->DestroyWindow();
+			delete pBtn;
+			pBtn = NULL;
+		}
+	}
+	//EDIT
+	for (int i = UI_POS_EDIT_BEGIN; i < UI_POS_EDIT_END; i++){
+		if (m_xUi[i].pCtrl){
+			CEdit* pEdit = ((CEdit*)m_xUi[i].pCtrl);
+			pEdit->DestroyWindow();
+			delete pEdit;
+			pEdit = NULL;
+		}
+	}
+}
