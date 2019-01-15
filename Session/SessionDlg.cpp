@@ -19,6 +19,7 @@
 CSessionDlg::CSessionDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CSessionDlg::IDD, pParent)
 {
+	//ShowWindow(SW_HIDE); //for testing, always show window
 	m_serverIP = "127.0.0.1"; //need get server ip dynamiclly
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -98,6 +99,7 @@ HCURSOR CSessionDlg::OnQueryDragIcon()
 void CSessionDlg::OnSendString()
 {
 	CNDKMessage message(DM_RDPSESSION_CONNECTIONSTRING);
+	message.Add(m_localIP);
 	message.Add(m_xSession.GetConnectionString());
 	SendMessageToServer(message);
 }
@@ -124,6 +126,7 @@ void CSessionDlg::OnTimer(UINT_PTR nIDEvent)
 
 void CSessionDlg::Init()
 {
+	m_localIP = L"";
 	memset(m_xUi, 0, sizeof(m_xUi));
 	DetectNetApapter();
 	m_serverIP = ServerIPAddress;
@@ -133,14 +136,19 @@ void CSessionDlg::Init()
 			m_serverIP = L"192.168.1.11";
 		}
 	}
-	GetServerAddress(m_serverIP.GetBuffer());
+	else
+		GetServerAddress(m_serverIP.GetBuffer());
 
-	SetTimer(IDT_RETRY_TIMER, 3000, NULL);
-
+	Connect();
+	
 }
 
 void CSessionDlg::Finalize()
 {
+	if (m_pAdapters){
+		delete m_pAdapters;
+		m_pAdapters = NULL;
+	}
 	DestroyUi();
 }
 
@@ -237,6 +245,7 @@ void CSessionDlg::GetServerAddress(wchar_t *pServerAddress)
 				// 192.168.X.1X ~ 192.168.X.9X  //Beagle define
 				int ip[4];
 				CString msg = m_pAdapters[c].GetIpAddr(d).c_str();
+				if (m_localIP.GetLength() == 0) m_localIP = msg; //get first ip as local ip
 				swscanf(msg, L"%d.%d.%d.%d", ip, ip + 1, ip + 2, ip + 3);
 				if (ip[0] == 192 && ip[1] == 168 && ip[2]<10 && ip[3]>10 && ip[3]<100) {
 					int ip_tail = (ip[3] / 10) * 10 + 1;
@@ -246,6 +255,11 @@ void CSessionDlg::GetServerAddress(wchar_t *pServerAddress)
 			}
 		}
 	}
+}
+
+void CSessionDlg::Connect()
+{
+	SetTimer(IDT_RETRY_TIMER, 3000, NULL); //wait for machineId
 }
 
 // Called when a message is received. The derived class must override this
@@ -282,5 +296,5 @@ void CSessionDlg::OnDisconnect(NDKClientDisconnection disconnectionType)
 	if (IsConnected())
 		CloseConnection();
 
-	SetTimer(IDT_RETRY_TIMER, 3000, NULL);
+	Connect();
 }

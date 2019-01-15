@@ -43,6 +43,7 @@ private:
 	void DestroyUi();
 	void DetectNetApapter();
 	void GetServerAddress(wchar_t *pServerAddress);
+	void Connect();
 protected:
 	virtual void OnMessage(CNDKMessage& message);
 	virtual void OnDisconnect(NDKClientDisconnection disconnectionType);
@@ -68,6 +69,7 @@ private:
 	UI_ITEM m_xUi[UI_POS_ITEM_END];
 	CRDPSession m_xSession;
 	CString	m_serverIP;
+	CString m_localIP;
 	UINT				m_adapterCount;
 	CNetworkAdapter*	m_pAdapters;
 };

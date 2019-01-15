@@ -125,7 +125,7 @@ void CViewDlg::OnConnect()
 	int nSel = ((CComboBox*)m_xUi[UI_POS_CB_SLAVES].pCtrl)->GetCurSel();
 	if (nSel == -1)
 		return;
-	pair<int, CString>* pData = (pair<int, CString>*)((CComboBox*)m_xUi[UI_POS_CB_SLAVES].pCtrl)->GetItemData(nSel);
+	pair<CString, CString>* pData = (pair<CString, CString>*)((CComboBox*)m_xUi[UI_POS_CB_SLAVES].pCtrl)->GetItemData(nSel);
 	CString strSession = pData->second;
 	CString strEdit;
 	((CEdit*)m_xUi[UI_POS_EDIT_CONNTIONSTRING].pCtrl)->GetWindowText(strEdit);
@@ -179,11 +179,11 @@ void CViewDlg::InitUiRectPos()
 			//CB
 		case UI_POS_CB_SLAVES:
 			ptBase = { 50, 0 };
-			ptSize = { 100, CONTROL_HEIGHT };
+			ptSize = { 150, CONTROL_HEIGHT };
 			break;
 			//edit
 		case UI_POS_EDIT_CONNTIONSTRING: //for test
-			ptBase = { 150, 0 };
+			ptBase = { 200, 0 };
 			ptSize = { 1500, CONTROL_HEIGHT };
 			break;
 			//view
@@ -200,7 +200,7 @@ void CViewDlg::InitUiRectPos()
 void CViewDlg::InitUi()
 {
 	//testing 
-	m_vConnectionString.push_back(make_pair(1, L"123"));
+	m_vConnectionString.push_back(make_pair(L"123", L"123"));
 	CString strCaption;
 	//BTN
 	for (int i = UI_POS_BTN_BEGIN; i < UI_POS_BTN_END; i++){
@@ -219,7 +219,7 @@ void CViewDlg::InitUi()
 		if (m_vConnectionString.size()>0 && m_xUi[UI_POS_CB_SLAVES].pCtrl){
 			for (int i = 0; i < m_vConnectionString.size(); i++){
 				CString str;
-				str.Format(_T("Slave: %d"), m_vConnectionString.at(i).first + 1);
+				str.Format(_T("Slave: %s"), m_vConnectionString.at(i).first);
 				((CComboBox*)m_xUi[UI_POS_CB_SLAVES].pCtrl)->AddString(str);
 				((CComboBox*)m_xUi[UI_POS_CB_SLAVES].pCtrl)->SetItemData(i, (DWORD)&m_vConnectionString.at(i));
 			}
@@ -305,15 +305,34 @@ void CViewDlg::OnConnect(long lUserId)
 // override this method.
 void CViewDlg::OnMessage(long lUserId, CNDKMessage& message)
 {
-	int cidx = FindId(lUserId);
-	//------------------------------------
 	switch (message.GetId())
 	{
 	case DM_RDPSESSION_CONNECTIONSTRING:
 		{
-			pair<int, CString> data;
-			data.first = cidx;
+			pair<CString, CString> data;
+			message.GetNext(data.first);
 			message.GetNext(data.second);
+			pair<CString, CString> * pOrign = NULL;
+			for (int x = 0; x < m_vConnectionString.size(); x++){
+				if (lstrcmp(m_vConnectionString.at(x).first, data.first) == 0){
+					pOrign = &m_vConnectionString.at(x);
+					break;
+				}
+			}
+
+			if (pOrign){ // update
+				pOrign->second = data.second;
+			}
+			else{
+				m_vConnectionString.push_back(data);
+				if (m_xUi[UI_POS_CB_SLAVES].pCtrl){
+					CString str;
+					str.Format(_T("Slave: %s"), data.first);
+					int nItem = ((CComboBox*)m_xUi[UI_POS_CB_SLAVES].pCtrl)->AddString(str);
+					((CComboBox*)m_xUi[UI_POS_CB_SLAVES].pCtrl)->SetItemData(nItem, (DWORD)&m_vConnectionString.at(m_vConnectionString.size() - 1));
+				}
+			}
+
 			TRACE(L"ya! %s \n", data.second);
 		}
 		break;
@@ -345,18 +364,4 @@ void CViewDlg::OnDisconnect(long lUserId, NDKServerDisconnection disconnectionTy
 	default:
 		break;
 	}
-}
-
-int CViewDlg::FindId(int lUserId)
-{
-	int cidx = -1;
-
-	for (int c = 0; c<MAXCLIENT; c++) {
-		if (lUserId == m_clientIDs[c]) {
-			cidx = c;
-			break;
-		}
-	}
-
-	return cidx;
 }

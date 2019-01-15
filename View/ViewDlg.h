@@ -49,10 +49,7 @@ protected:
 	virtual void OnMessage(long lUserId, CNDKMessage& message);
 	virtual void OnDisconnect(long lUserId, NDKServerDisconnection disconnectionType);
 private:
-	int FindId(int lUserId);
-private:
-	LONG	m_clientIDs[MAXCLIENT];
-	vector<pair<int, CString>> m_vConnectionString;
+	vector<pair<CString, CString>> m_vConnectionString; /*ip, connectionstring*/
 	typedef struct UI_ITEM_{
 		RECT rcUi;
 		void *pCtrl;
