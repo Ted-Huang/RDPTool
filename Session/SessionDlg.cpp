@@ -104,6 +104,15 @@ void CSessionDlg::OnSendString()
 void CSessionDlg::Init()
 {
 	memset(m_xUi, 0, sizeof(m_xUi));
+	DetectNetApapter();
+	m_serverIP = ServerIPAddress;
+	if (!lstrcmp(m_serverIP, L"0.0.0.0")){
+		GetServerAddress(m_serverIP.GetBuffer());  
+		if (!lstrcmp(m_serverIP, L"0.0.0.0")) {	// Default server IP.
+			m_serverIP = L"192.168.1.11";
+		}
+	}
+	GetServerAddress(m_serverIP.GetBuffer());
 	if (!OpenConnection(m_serverIP, ServerListenPort))
 		TRACE(L"Connect to server fail \n");
 }
@@ -179,6 +188,40 @@ void CSessionDlg::DestroyUi()
 			pEdit->DestroyWindow();
 			delete pEdit;
 			pEdit = NULL;
+		}
+	}
+}
+
+void CSessionDlg::DetectNetApapter()
+{
+	DWORD dwErr = 0;
+	ULONG ulNeeded = 0;
+	if (m_pAdapters == NULL){
+		dwErr = EnumNetworkAdapters(m_pAdapters, 0, &ulNeeded);
+		if (dwErr == ERROR_INSUFFICIENT_BUFFER) {
+			m_adapterCount = ulNeeded / sizeof(CNetworkAdapter);
+			m_pAdapters = new CNetworkAdapter[m_adapterCount];
+			dwErr = EnumNetworkAdapters(m_pAdapters, ulNeeded, &ulNeeded);
+		}
+	}
+}
+
+void CSessionDlg::GetServerAddress(wchar_t *pServerAddress)
+{
+	if (pServerAddress){
+		for (int c = 0; c<(int)m_adapterCount; c++) {
+			//Support IP aliasing.
+			for (unsigned int d = 0; d<m_pAdapters[c].GetNumIpAddrs(); d++) {
+				// 192.168.X.1X ~ 192.168.X.9X  //Beagle define
+				int ip[4];
+				CString msg = m_pAdapters[c].GetIpAddr(d).c_str();
+				swscanf(msg, L"%d.%d.%d.%d", ip, ip + 1, ip + 2, ip + 3);
+				if (ip[0] == 192 && ip[1] == 168 && ip[2]<10 && ip[3]>10 && ip[3]<100) {
+					int ip_tail = (ip[3] / 10) * 10 + 1;
+					swprintf(pServerAddress, 16, L"%d.%d.%d.%d", 192, 168, ip[2], ip_tail);
+					break;
+				}
+			}
 		}
 	}
 }

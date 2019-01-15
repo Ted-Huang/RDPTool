@@ -36,6 +36,12 @@
     <ClInclude Include="RDPSession.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
+    <ClInclude Include="netadapter.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="winerr.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Session.cpp">
@@ -48,6 +54,9 @@
       <Filter>原始程式檔</Filter>
     </ClCompile>
     <ClCompile Include="RDPSession.cpp">
+      <Filter>原始程式檔</Filter>
+    </ClCompile>
+    <ClCompile Include="netadapter.cpp">
       <Filter>原始程式檔</Filter>
     </ClCompile>
   </ItemGroup>

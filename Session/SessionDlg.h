@@ -6,6 +6,8 @@
 #include "RDPSession.h"
 #include "NDKClient.h"
 #include "MasterSlave.h"
+#include "netadapter.h"
+
 // CSessionDlg ¹ï¸Ü¤è¶ô
 class CSessionDlg : public CDialogEx, public CNDKClient
 {
@@ -37,7 +39,8 @@ private:
 	void InitUiRectPos();
 	void InitUi();
 	void DestroyUi();
-
+	void DetectNetApapter();
+	void GetServerAddress(wchar_t *pServerAddress);
 protected:
 	virtual void OnMessage(CNDKMessage& message);
 	virtual void OnDisconnect(NDKClientDisconnection disconnectionType);
@@ -63,4 +66,6 @@ private:
 	UI_ITEM m_xUi[UI_POS_ITEM_END];
 	CRDPSession m_xSession;
 	CString	m_serverIP;
+	UINT				m_adapterCount;
+	CNetworkAdapter*	m_pAdapters;
 };
