@@ -19,6 +19,7 @@
 CSessionDlg::CSessionDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CSessionDlg::IDD, pParent)
 {
+	m_serverIP = "127.0.0.1"; //need get server ip dynamiclly
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
 
@@ -101,6 +102,8 @@ void CSessionDlg::OnSendString()
 void CSessionDlg::Init()
 {
 	memset(m_xUi, 0, sizeof(m_xUi));
+	if (!OpenConnection(m_serverIP, ServerListenPort))
+		TRACE(L"Connect to server fail \n");
 }
 
 void CSessionDlg::Finalize()
@@ -175,5 +178,36 @@ void CSessionDlg::DestroyUi()
 			delete pEdit;
 			pEdit = NULL;
 		}
+	}
+}
+
+// Called when a message is received. The derived class must override this
+// method.
+void CSessionDlg::OnMessage(CNDKMessage& message)
+{
+	
+}
+// Called whenever an unexpected disconnection occurs. The only case when
+// this method isn't call is when CloseConnection is used. CloseConnection
+// don't need to be called when when OnDisconnect is called. The derived 
+// class must override this method.
+void CSessionDlg::OnDisconnect(NDKClientDisconnection disconnectionType)
+{
+	UINT unResId = 0;
+	switch (disconnectionType)
+	{
+	case NDKClient_NormalDisconnection:
+		return;
+	case NDKClient_ServerCloseConnection:
+		break;
+
+	case NDKClient_ServerStop:
+		break;
+	case NDKClient_ErrorSendingMessage:
+		break;
+	case NDKClient_ErrorReceivingMessage:
+		break;
+	default:
+		break;
 	}
 }

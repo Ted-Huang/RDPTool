@@ -5,9 +5,9 @@
 #pragma once
 #include "RDPSession.h"
 #include "NDKClient.h"
-
+#include "MasterSlave.h"
 // CSessionDlg 對話方塊
-class CSessionDlg : public CDialogEx//, public CNDKClient
+class CSessionDlg : public CDialogEx, public CNDKClient
 {
 // 建構
 public:
@@ -38,6 +38,9 @@ private:
 	void InitUi();
 	void DestroyUi();
 
+protected:
+	virtual void OnMessage(CNDKMessage& message);
+	virtual void OnDisconnect(NDKClientDisconnection disconnectionType);
 private:
 	typedef struct UI_ITEM_{
 		RECT rcUi;
@@ -59,4 +62,5 @@ private:
 	};
 	UI_ITEM m_xUi[UI_POS_ITEM_END];
 	CRDPSession m_xSession;
+	CString	m_serverIP;
 };
