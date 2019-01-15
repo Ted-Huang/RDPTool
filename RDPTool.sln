@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Session", "Session\Session.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "View", "View\View.vcxproj", "{FE3AB8F2-8175-499B-94E0-9A72424E297A}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NDK", "NDK\NDK.vcxproj", "{368983C5-905F-4306-8F81-868C95D5A518}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -21,6 +23,10 @@ Global
 		{FE3AB8F2-8175-499B-94E0-9A72424E297A}.Debug|Win32.Build.0 = Debug|Win32
 		{FE3AB8F2-8175-499B-94E0-9A72424E297A}.Release|Win32.ActiveCfg = Release|Win32
 		{FE3AB8F2-8175-499B-94E0-9A72424E297A}.Release|Win32.Build.0 = Release|Win32
+		{368983C5-905F-4306-8F81-868C95D5A518}.Debug|Win32.ActiveCfg = Debug|Win32
+		{368983C5-905F-4306-8F81-868C95D5A518}.Debug|Win32.Build.0 = Debug|Win32
+		{368983C5-905F-4306-8F81-868C95D5A518}.Release|Win32.ActiveCfg = Release|Win32
+		{368983C5-905F-4306-8F81-868C95D5A518}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
