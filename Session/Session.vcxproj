@@ -22,6 +22,7 @@
     <ProjectGuid>{E7075FEF-E00F-4D61-8511-34DE5748E384}</ProjectGuid>
     <RootNamespace>Session</RootNamespace>
     <Keyword>MFCProj</Keyword>
+    <ProjectName>AOI_RDPSession</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

@@ -121,7 +121,7 @@ HCURSOR CViewDlg::OnQueryDragIcon()
 
 void CViewDlg::OnConnect()
 {
-	if (!m_xUi[UI_POS_RDPVIEW_RDPVIEW].pCtrl || !m_xUi[UI_POS_EDIT_CONNTIONSTRING].pCtrl){
+	if (!m_xUi[UI_POS_RDPVIEW_RDPVIEW].pCtrl){
 		return;
 	}
 
@@ -130,10 +130,7 @@ void CViewDlg::OnConnect()
 		return;
 	pair<CString, CString>* pData = (pair<CString, CString>*)((CComboBox*)m_xUi[UI_POS_CB_SLAVES].pCtrl)->GetItemData(nSel);
 	CString strSession = pData->second;
-	CString strEdit;
-	((CEdit*)m_xUi[UI_POS_EDIT_CONNTIONSTRING].pCtrl)->GetWindowText(strEdit);
-	if (strEdit.GetLength() > 0)
-		strSession = strEdit;
+
 	try
 	{
 		((CRDPSRAPIViewer*)m_xUi[UI_POS_RDPVIEW_RDPVIEW].pCtrl)->Connect(strSession, L"groupName", L"");
@@ -184,12 +181,7 @@ void CViewDlg::InitUiRectPos()
 			//CB
 		case UI_POS_CB_SLAVES:
 			ptBase = { 50, 0 };
-			ptSize = { 150, CONTROL_HEIGHT };
-			break;
-			//edit
-		case UI_POS_EDIT_CONNTIONSTRING: //for test
-			ptBase = { 200, 0 };
-			ptSize = { 1500, CONTROL_HEIGHT };
+			ptSize = { 200, CONTROL_HEIGHT };
 			break;
 			//view
 		case UI_POS_RDPVIEW_RDPVIEW:
@@ -204,8 +196,6 @@ void CViewDlg::InitUiRectPos()
 
 void CViewDlg::InitUi()
 {
-	//testing 
-	m_vConnectionString.push_back(make_pair(L"123", L"123"));
 	CString strCaption;
 	//BTN
 	for (int i = UI_POS_BTN_BEGIN; i < UI_POS_BTN_END; i++){
@@ -229,13 +219,6 @@ void CViewDlg::InitUi()
 				((CComboBox*)m_xUi[UI_POS_CB_SLAVES].pCtrl)->SetItemData(i, (DWORD)&m_vConnectionString.at(i));
 			}
 
-		}
-	}
-	//EDIT
-	for (int i = UI_POS_EDIT_BEGIN; i < UI_POS_EDIT_END; i++){
-		if (!m_xUi[i].pCtrl){
-			m_xUi[i].pCtrl = new CEdit();
-			((CEdit*)m_xUi[i].pCtrl)->Create(WS_CHILD | WS_VISIBLE | WS_TABSTOP | ES_LEFT | WS_BORDER, m_xUi[i].rcUi, this, i);
 		}
 	}
 	//RDPVIEW
@@ -266,15 +249,6 @@ void CViewDlg::DestroyUi()
 			pCB->DestroyWindow();
 			delete pCB;
 			pCB = NULL;
-		}
-	}
-	//EDIT
-	for (int i = UI_POS_EDIT_BEGIN; i < UI_POS_EDIT_END; i++){
-		if (m_xUi[i].pCtrl){
-			CEdit* pEdit = ((CEdit*)m_xUi[i].pCtrl);
-			pEdit->DestroyWindow();
-			delete pEdit;
-			pEdit = NULL;
 		}
 	}
 
