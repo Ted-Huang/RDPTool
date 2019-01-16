@@ -187,6 +187,11 @@ void CSessionDlg::InitUiRectPos()
 			ptBase = { 50, 30 };
 			ptSize = { 1400, 30 };
 			break;
+			//LABEL
+		case UI_POS_LABEL_CONNECTIONINFO:
+			ptBase = { 0, 0 };
+			ptSize = { 1400, 30 };
+			break;
 		}
 
 		m_xUi[i].rcUi = { ptBase.x, ptBase.y, ptBase.x + ptSize.x, ptBase.y + ptSize.y };
@@ -211,8 +216,17 @@ void CSessionDlg::InitUi()
 			((CEdit*)m_xUi[i].pCtrl)->Create(WS_CHILD | WS_VISIBLE | ES_READONLY | WS_TABSTOP | ES_LEFT | WS_BORDER, m_xUi[i].rcUi, this, i);
 		}
 	}
+	//EDIT
+	for (int i = UI_POS_LABEL_BEGIN; i < UI_POS_LABEL_END; i++){
+		if (!m_xUi[i].pCtrl){
+			m_xUi[i].pCtrl = new CStatic();
+			((CStatic*)m_xUi[i].pCtrl)->Create(L"", WS_CHILD | WS_VISIBLE  | WS_TABSTOP , m_xUi[i].rcUi, this, i);
+		}
+	}
 	((CEdit*)m_xUi[UI_POS_EDIT_CONNTIONSTRING].pCtrl)->SetWindowText(m_xSession.GetConnectionString());
-
+	CString str;
+	str.Format(L"server: %s, local:%s", m_serverIP, m_localIP);
+	((CStatic*)m_xUi[UI_POS_LABEL_BEGIN].pCtrl)->SetWindowText(str);
 }
 
 void CSessionDlg::DestroyUi()
@@ -233,6 +247,15 @@ void CSessionDlg::DestroyUi()
 			pEdit->DestroyWindow();
 			delete pEdit;
 			pEdit = NULL;
+		}
+	}
+	//LABEL
+	for (int i = UI_POS_LABEL_BEGIN; i < UI_POS_LABEL_END; i++){
+		if (m_xUi[i].pCtrl){
+			CStatic* pLabel = ((CStatic*)m_xUi[i].pCtrl);
+			pLabel->DestroyWindow();
+			delete pLabel;
+			pLabel = NULL;
 		}
 	}
 }
