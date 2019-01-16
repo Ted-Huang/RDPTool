@@ -12,18 +12,18 @@
 // CSessionDlg 對話方塊
 class CSessionDlg : public CDialogEx, public CNDKClient
 {
-// 建構
+	// 建構
 public:
 	CSessionDlg(CWnd* pParent = NULL);	// 標準建構函式
 	~CSessionDlg();
-// 對話方塊資料
+	// 對話方塊資料
 	enum { IDD = IDD_SESSION_DIALOG };
 
-	protected:
+protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV 支援
 
 
-// 程式碼實作
+	// 程式碼實作
 protected:
 	HICON m_hIcon;
 
@@ -43,7 +43,6 @@ private:
 	void InitUi();
 	void DestroyUi();
 	void DetectNetApapter();
-	void GetServerAddress(wchar_t *pServerAddress);
 	void Connect();
 protected:
 	virtual void OnMessage(CNDKMessage& message);
@@ -76,7 +75,5 @@ private:
 	CRDPSession m_xSession;
 	CString	m_serverIP;
 	CString m_localIP;
-	UINT				m_adapterCount;
-	CNetworkAdapter*	m_pAdapters;
 	BOOL m_bVisible;
 };

@@ -115,7 +115,7 @@ void CSessionDlg::OnTimer(UINT_PTR nIDEvent)
 		}
 		else
 			TRACE(L"Connect to server fail \n");
-		
+
 		break;
 	default:
 		CDialogEx::OnTimer(nIDEvent);
@@ -132,7 +132,7 @@ void CSessionDlg::OnWindowPosChanging(WINDOWPOS FAR* lpwndpos)
 }
 
 void CSessionDlg::Init()
-{	
+{
 	m_bVisible = FALSE;
 	CString strCmd = theApp.m_lpCmdLine;
 	if (!strCmd.IsEmpty()){
@@ -142,28 +142,19 @@ void CSessionDlg::Init()
 		}
 	}
 
-	m_localIP = L"";
 	memset(m_xUi, 0, sizeof(m_xUi));
-	DetectNetApapter();
 	m_serverIP = ServerIPAddress;
+	m_localIP = ServerIPAddress;
+
 	if (!lstrcmp(m_serverIP, L"0.0.0.0")){
-		GetServerAddress(m_serverIP.GetBuffer());  
-		if (!lstrcmp(m_serverIP, L"0.0.0.0")) {	// Default server IP.
-			m_serverIP = L"192.168.1.11";
-		}
+		DetectNetApapter();
 	}
-	else
-		GetServerAddress(m_serverIP.GetBuffer());
 
 	Connect();
 }
 
 void CSessionDlg::Finalize()
 {
-	if (m_pAdapters){
-		delete[] m_pAdapters;
-		m_pAdapters = NULL;
-	}
 	DestroyUi();
 }
 
@@ -183,7 +174,7 @@ void CSessionDlg::InitUiRectPos()
 			ptSize = { 50, 30 };
 			break;
 			//edit
-		case UI_POS_EDIT_CONNTIONSTRING:  
+		case UI_POS_EDIT_CONNTIONSTRING:
 			ptBase = { 50, 30 };
 			ptSize = { 1400, 30 };
 			break;
@@ -220,7 +211,7 @@ void CSessionDlg::InitUi()
 	for (int i = UI_POS_LABEL_BEGIN; i < UI_POS_LABEL_END; i++){
 		if (!m_xUi[i].pCtrl){
 			m_xUi[i].pCtrl = new CStatic();
-			((CStatic*)m_xUi[i].pCtrl)->Create(L"", WS_CHILD | WS_VISIBLE  | WS_TABSTOP , m_xUi[i].rcUi, this, i);
+			((CStatic*)m_xUi[i].pCtrl)->Create(L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP, m_xUi[i].rcUi, this, i);
 		}
 	}
 	((CEdit*)m_xUi[UI_POS_EDIT_CONNTIONSTRING].pCtrl)->SetWindowText(m_xSession.GetConnectionString());
@@ -262,36 +253,38 @@ void CSessionDlg::DestroyUi()
 
 void CSessionDlg::DetectNetApapter()
 {
+	m_localIP = L"";
 	DWORD dwErr = 0;
 	ULONG ulNeeded = 0;
-	if (m_pAdapters == NULL){
-		dwErr = EnumNetworkAdapters(m_pAdapters, 0, &ulNeeded);
-		if (dwErr == ERROR_INSUFFICIENT_BUFFER) {
-			m_adapterCount = ulNeeded / sizeof(CNetworkAdapter);
-			m_pAdapters = new CNetworkAdapter[m_adapterCount];
-			dwErr = EnumNetworkAdapters(m_pAdapters, ulNeeded, &ulNeeded);
-		}
+	CNetworkAdapter* pAdapter = NULL;
+	int nNetCount = 0;
+	dwErr = EnumNetworkAdapters(pAdapter, 0, &ulNeeded);
+	if (dwErr == ERROR_INSUFFICIENT_BUFFER) {
+		nNetCount = ulNeeded / sizeof(CNetworkAdapter);
+		pAdapter = new CNetworkAdapter[nNetCount];
+		dwErr = EnumNetworkAdapters(pAdapter, ulNeeded, &ulNeeded);
 	}
-}
-
-void CSessionDlg::GetServerAddress(wchar_t *pServerAddress)
-{
-	if (pServerAddress && m_pAdapters){
-		for (int c = 0; c<(int)m_adapterCount; c++) {
-			//Support IP aliasing.
-			for (unsigned int d = 0; d<m_pAdapters[c].GetNumIpAddrs(); d++) {
-				int ip[4];
-				CString msg = m_pAdapters[c].GetIpAddr(d).c_str();
-				if (m_localIP.GetLength() == 0) m_localIP = msg; //get first ip as local ip
-				swscanf(msg, L"%d.%d.%d.%d", ip, ip + 1, ip + 2, ip + 3);
-				if (ip[0] == 192 && ip[1] == 168 && ip[2]<10 && ip[3]>10 && ip[3]<100) {
-					int ip_tail = (ip[3] / 10) * 10 + 1;
-					swprintf(pServerAddress, 16, L"%d.%d.%d.%d", 192, 168, ip[2], ip_tail);
-					break;
-				}
+	//Get IpAddress
+	for (int c = 0; c<nNetCount; c++) {
+		//Support IP aliasing.
+		for (unsigned int d = 0; d<pAdapter[c].GetNumIpAddrs(); d++) {
+			int ip[4];
+			CString msg = pAdapter[c].GetIpAddr(d).c_str();
+			if (m_localIP.GetLength() == 0) m_localIP = msg; //get first ip as local ip
+			swscanf(msg, L"%d.%d.%d.%d", ip, ip + 1, ip + 2, ip + 3);
+			if (ip[0] == 192 && ip[1] == 168 && ip[2]<10 && ip[3]>10 && ip[3]<100) {
+				int ip_tail = (ip[3] / 10) * 10 + 1;
+				m_serverIP.Format(_T("%d.%d.%d.%d"), ip[0], ip[1], ip[2], ip_tail);
+				break;
 			}
 		}
 	}
+
+	if (pAdapter){
+		delete[]pAdapter;
+		pAdapter = NULL;
+	}
+
 }
 
 void CSessionDlg::Connect()
@@ -303,7 +296,7 @@ void CSessionDlg::Connect()
 // method.
 void CSessionDlg::OnMessage(CNDKMessage& message)
 {
-	
+
 }
 // Called whenever an unexpected disconnection occurs. The only case when
 // this method isn't call is when CloseConnection is used. CloseConnection
