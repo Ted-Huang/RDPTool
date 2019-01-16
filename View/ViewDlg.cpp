@@ -69,9 +69,12 @@ BOOL CViewDlg::OnCommand(WPARAM wParam, LPARAM lParam)
 			return TRUE;
 			break;
 		default:
-			CDialogEx::OnCommand(wParam, lParam);
+			return CDialogEx::OnCommand(wParam, lParam);
 			break;
 		}
+	}
+	else{
+		return CDialogEx::OnCommand(wParam, lParam);
 	}
 }
 
@@ -151,8 +154,10 @@ void CViewDlg::Init()
 	MoveWindow(0, 0, rcDesktop.Width(), rcDesktop.Height());
 	memset(m_xUi, 0, sizeof(m_xUi));
 
-	if (!StartListening(ServerListenPort))
-		TRACE("socket sever start Fail! \n");
+	if (!StartListening(ServerListenPort)){
+		AfxMessageBox(L"socket sever start Fail!");
+		PostMessage(WM_CLOSE, NULL, NULL);
+	}
 }
 
 void CViewDlg::Finalize()
@@ -160,7 +165,7 @@ void CViewDlg::Finalize()
 	DestroyUi();
 }
 
-#define CONTROL_HEIGHT 50
+#define CONTROL_HEIGHT 25
 void CViewDlg::InitUiRectPos()
 {
 	POINT ptBase = { 0, 0 };
@@ -332,8 +337,6 @@ void CViewDlg::OnMessage(long lUserId, CNDKMessage& message)
 					((CComboBox*)m_xUi[UI_POS_CB_SLAVES].pCtrl)->SetItemData(nItem, (DWORD)&m_vConnectionString.at(m_vConnectionString.size() - 1));
 				}
 			}
-
-			TRACE(L"ya! %s \n", data.second);
 		}
 		break;
 	default:

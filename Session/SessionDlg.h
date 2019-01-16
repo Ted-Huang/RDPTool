@@ -33,6 +33,7 @@ protected:
 	afx_msg HCURSOR OnQueryDragIcon();
 	afx_msg void OnSendString();
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
+	afx_msg void OnWindowPosChanging(WINDOWPOS FAR* lpwndpos);
 	DECLARE_MESSAGE_MAP()
 
 private:
@@ -72,4 +73,5 @@ private:
 	CString m_localIP;
 	UINT				m_adapterCount;
 	CNetworkAdapter*	m_pAdapters;
+	BOOL m_bVisible;
 };

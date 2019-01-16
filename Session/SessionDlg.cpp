@@ -19,8 +19,6 @@
 CSessionDlg::CSessionDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CSessionDlg::IDD, pParent)
 {
-	//ShowWindow(SW_HIDE); //for testing, always show window
-	m_serverIP = "127.0.0.1"; //need get server ip dynamiclly
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
 
@@ -39,6 +37,7 @@ BEGIN_MESSAGE_MAP(CSessionDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(UI_POS_BTN_SEND, OnSendString)
+	ON_WM_WINDOWPOSCHANGING()
 END_MESSAGE_MAP()
 
 
@@ -124,8 +123,25 @@ void CSessionDlg::OnTimer(UINT_PTR nIDEvent)
 	}
 }
 
-void CSessionDlg::Init()
+void CSessionDlg::OnWindowPosChanging(WINDOWPOS FAR* lpwndpos)
 {
+	if (!m_bVisible)
+		lpwndpos->flags &= ~SWP_SHOWWINDOW;
+
+	CDialog::OnWindowPosChanging(lpwndpos);
+}
+
+void CSessionDlg::Init()
+{	
+	m_bVisible = FALSE;
+	CString strCmd = theApp.m_lpCmdLine;
+	if (!strCmd.IsEmpty()){
+		int nPos = strCmd.MakeUpper().Find(_T("/SHOW"));
+		if (nPos != -1){
+			m_bVisible = TRUE;
+		}
+	}
+
 	m_localIP = L"";
 	memset(m_xUi, 0, sizeof(m_xUi));
 	DetectNetApapter();
@@ -140,13 +156,12 @@ void CSessionDlg::Init()
 		GetServerAddress(m_serverIP.GetBuffer());
 
 	Connect();
-	
 }
 
 void CSessionDlg::Finalize()
 {
 	if (m_pAdapters){
-		delete m_pAdapters;
+		delete[] m_pAdapters;
 		m_pAdapters = NULL;
 	}
 	DestroyUi();
@@ -238,11 +253,10 @@ void CSessionDlg::DetectNetApapter()
 
 void CSessionDlg::GetServerAddress(wchar_t *pServerAddress)
 {
-	if (pServerAddress){
+	if (pServerAddress && m_pAdapters){
 		for (int c = 0; c<(int)m_adapterCount; c++) {
 			//Support IP aliasing.
 			for (unsigned int d = 0; d<m_pAdapters[c].GetNumIpAddrs(); d++) {
-				// 192.168.X.1X ~ 192.168.X.9X  //Beagle define
 				int ip[4];
 				CString msg = m_pAdapters[c].GetIpAddr(d).c_str();
 				if (m_localIP.GetLength() == 0) m_localIP = msg; //get first ip as local ip
@@ -259,7 +273,7 @@ void CSessionDlg::GetServerAddress(wchar_t *pServerAddress)
 
 void CSessionDlg::Connect()
 {
-	SetTimer(IDT_RETRY_TIMER, 3000, NULL); //wait for machineId
+	SetTimer(IDT_RETRY_TIMER, 3000, NULL);
 }
 
 // Called when a message is received. The derived class must override this
