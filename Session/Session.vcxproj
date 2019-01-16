@@ -118,8 +118,8 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(ProjectDir)\..\lib;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>NDK.lib;Iphlpapi.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)\..\libd;</AdditionalLibraryDirectories>
+      <AdditionalDependencies>NDKd.lib;Iphlpapi.lib</AdditionalDependencies>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
