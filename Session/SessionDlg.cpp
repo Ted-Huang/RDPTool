@@ -133,12 +133,12 @@ void CSessionDlg::OnWindowPosChanging(WINDOWPOS FAR* lpwndpos)
 
 void CSessionDlg::Init()
 {
-	m_bVisible = FALSE;
+	m_bVisible = TRUE;
 	CString strCmd = theApp.m_lpCmdLine;
 	if (!strCmd.IsEmpty()){
-		int nPos = strCmd.MakeUpper().Find(_T("/SHOW"));
+		int nPos = strCmd.MakeUpper().Find(_T("/NOSHOW"));
 		if (nPos != -1){
-			m_bVisible = TRUE;
+			m_bVisible = FALSE;
 		}
 	}
 
